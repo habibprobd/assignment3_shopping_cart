@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Shopping Cart</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
+   <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+   <section>
+      <div class="container">
+         <div class="cart">
+            <div class="col-md-12 col-lg-10 mx-auto">
+               <!-- Start iphone area -->
+
+               <div class="cart-item" id="iPhone_cart">
+                  <div class="row">
+                     <div class="col-md-7 center-item">
+                        <img src="images/product-1.png" alt="">
+                        <h5>iPhone 11 128GB Black</h5>
+                     </div>
+
+                     <div class="col-md-5 center-item">
+                        <div class="input-group number-spinner">
+                           <button id="cutback_price_iphone" class="btn btn-default"><i class="fas fa-minus"></i></button>
+                           <input id="quantity_iphone" type="text" onkeydown="return false;" class=" form-control text-center" value="1">
+                           <button id="add_price_iphone_11" class="btn btn-default"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <h5>$ <span id="iPhone11_price">1219</span></h5>
+                        <img id="remove_iPhone_11" src="images/remove.png" alt="" class="remove-item">
+                     </div>
+                  </div>
+
+                  <!-- End iphone area -->
+               </div> 
+
+
+               <!-- start Case Area  -->
+
+               <div class="cart-item" id="Silicone_cart">
+                  <div class="row">
+                     <div class="col-md-7 center-item mx-auto">
+                        <img src="images/product-2.png" alt="">
+                        <h5>iPhone 11 Silicone Case - Black</h5>
+                     </div>
+                     <div class="col-md-5 center-item">
+                        <div class="input-group number-spinner">
+                           <button id="cutback_price_case" class="btn btn-default"><i class="fas fa-minus"></i></button>
+                           <input id="Quantity_Case_11" type="text" onkeydown="return false;" class=" form-control text-center" value="1">
+                           <button id="add_price_Case_11" class="btn btn-default"><i class="fas fa-plus"></i></button>
+
+                        </div>
+                        <h5>$ <span id="silicone_Case_price">59</span></h5>
+                        <img id="remove_iPhone_Case_11" src="images/remove.png" alt="" class="remove-item">
+                     </div>
+                  </div>
+               </div>
+
+               <!-- End Case Area  --> 
+
+               <div class="cart-item">
+                  <div class="row">
+                     <div class="col-md-8">
+                        <h5>Subtotal: </h5>
+                        <h5>Tax:(15% of subtotal)</h5>
+                        <h5>Total:</h5>
+                     </div>
+                     <div class="col-md-4 status">
+                        <h5>$<span id="subtotal">0</span></h5>
+                        <h5>$<span id="tax">0</span></h5>
+                        <h5>$<span id="total">0</span></h5>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-md-12 pt-4 pb-4">
+                  <button type="button" class="btn btn-success check-out">Check Out</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+  
+   <script>
+//  ready iphone and case by pricing Zero 
+const iPhone_price = parseFloat(document.getElementById("iPhone11_price").innerText);
+const iPhone_Case_price = parseFloat(document.getElementById("silicone_Case_price").innerText);
+const by_default_Sub_total_price = iPhone_price + iPhone_Case_price;
+document.getElementById("subtotal").innerText = by_default_Sub_total_price; 
+
+// tax value
+const by_default_tax_price = parseFloat((by_default_Sub_total_price * .15).toFixed(1));
+document.getElementById("tax").innerText = by_default_tax_price;
+
+// total value
+const add_to_Cart_Def_price = by_default_Sub_total_price + by_default_tax_price;
+document.getElementById("total").innerText = add_to_Cart_Def_price;
+
+// add unit
+document.getElementById("add_price_iphone_11").addEventListener("click", function() { 
+    add_items("quantity_iphone");
+    Order_By_unit("quantity_iphone", 1219, "iPhone11_price");
+    tax_include("subtotal", "total", "tax");
+});
+document.getElementById("add_price_Case_11").addEventListener("click", function() {
+    add_items("Quantity_Case_11");
+    Order_By_unit("Quantity_Case_11", 59, "silicone_Case_price");
+    tax_include("subtotal", "total", "tax");
+});
+
+// drop unit
+document.getElementById("cutback_price_iphone").addEventListener("click", function() {
+    drop_items("quantity_iphone");
+    Order_By_unit("quantity_iphone", 1219, "iPhone11_price");
+    tax_include("subtotal", "total", "tax");
+});
+document.getElementById("cutback_price_case").addEventListener("click", function() {
+    drop_items("Quantity_Case_11");
+    Order_By_unit("Quantity_Case_11", 59, "silicone_Case_price");
+    tax_include("subtotal", "total", "tax");
+});
+
+// remove iphone 11
+document.getElementById("remove_iPhone_11").addEventListener("click", function() {
+
+    remove_items("iPhone_cart", "iPhone11_price", "subtotal", "tax", "total" );
+
+    document.getElementById("add_price_Case_11").addEventListener("click", function() {
+        cross_sign_sub_total("silicone_Case_price", "subtotal");
+        tax_include("subtotal", "total", "tax");
+    });
+    document.getElementById("cutback_price_case").addEventListener("click", function() {
+        cross_sign_sub_total("silicone_Case_price", "subtotal");
+        tax_include("subtotal", "total", "tax");
+    }); 
+   
+});
+
+// remove case 11
+document.getElementById("remove_iPhone_Case_11").addEventListener("click", function() {
+    
+    remove_items("Silicone_cart", "silicone_Case_price", "subtotal", "tax", "total" );
+    
+    document.getElementById("add_price_iphone_11").addEventListener("click", function() {
+        cross_sign_sub_total("iPhone11_price", "subtotal");
+        tax_include("subtotal", "total", "tax");
+    });
+    document.getElementById("cutback_price_iphone").addEventListener("click", function() {
+        cross_sign_sub_total("iPhone11_price", "subtotal");
+        tax_include("subtotal", "total", "tax");
+    });
+     
+});
+
+// add items  (increment ) 
+function add_items(id) {
+    const iniQplus = parseFloat(document.getElementById(id).value);
+    const result = iniQplus + 1; // when click + sign
+    document.getElementById(id).value = result;
+}
+ 
+// drop items from cart ( decrement )
+function drop_items(id) {
+    const iniQplus = parseFloat(document.getElementById(id).value);
+    if( iniQplus > 0 ) { 
+        const result = iniQplus - 1; // when click - sign 
+        document.getElementById(id).value = result;
+    }
+}
+
+// Order by unit price
+function Order_By_unit(regular_price, Price, set_txt_id){ 
+    const Num_of_items = document.getElementById(regular_price).value; 
+    const Product_Q_price = Num_of_items * Price; // product quantity price  
+    document.getElementById(set_txt_id).innerText = Product_Q_price;
+
+    SubTotal_price("iPhone11_price", "silicone_Case_price", "subtotal"); 
+}
+
+// Sub total price 
+function SubTotal_price(Product_price_1, Product_price_2, sub_total) {
+    const Price_1 = document.getElementById(Product_price_1).innerText; //product_price
+    const Price_2 = document.getElementById(Product_price_2).innerText; //product_price
+    document.getElementById(sub_total).innerText = parseFloat(Price_1) + parseFloat(Price_2);  //subtotal
+}
+
+ // cross sign updates 
+function cross_sign_sub_total(remove_q_1, plain_text){
+    const cross_total = parseFloat(document.getElementById(remove_q_1).innerText);
+    document.getElementById(plain_text).innerText = cross_total; 
+}
+
+// Tax information's add 
+function tax_include(prod_tax, totalTax, percent_tax) {
+    const sub_total = parseFloat(document.getElementById(prod_tax).innerText);
+    const tax = parseFloat(sub_total * .15 ).toFixed(1);
+    const total = parseFloat(sub_total) + parseFloat(tax);
+    document.getElementById(percent_tax).innerText = tax;
+    document.getElementById(totalTax).innerText = total;
+}
+
+// clean add to cart 0 0 0 0 
+function remove_items(iPhoneID, priceIphone, subtotal_id, tax_id, total_amount){
+    document.getElementById(iPhoneID).style.display = "none";
+    const Price_1 = parseFloat(document.getElementById(priceIphone).innerText);
+    const convert_subtotal = parseFloat(document.getElementById(subtotal_id).innerText);
+    const present_subtotal = convert_subtotal - Price_1;
+    document.getElementById(subtotal_id).innerText = present_subtotal;
+    const present_Tax = parseFloat(present_subtotal * .15 );
+    document.getElementById(tax_id).innerText = present_Tax;
+    document.getElementById(total_amount).innerText = present_subtotal + present_Tax;
+} 
+   </script>
+</body>
+
+</html>
